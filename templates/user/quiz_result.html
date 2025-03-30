@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz Result - Quiz App{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="result-card">
+            <h4>{{ attempt.quiz.title }}</h4>
+            <div class="score">{{ "%.1f"|format(attempt.score) }}%</div>
+            <div class="message">
+                {% if attempt.score >= 70 %}
+                    Congratulations! You've passed the quiz with flying colors!
+                {% elif attempt.score >= 50 %}
+                    Good effort! You've passed the quiz.
+                {% else %}
+                    Keep practicing! You can do better next time.
+                {% endif %}
+            </div>
+            <div class="d-grid gap-2">
+                <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
+                <a href="{{ url_for('take_quiz', quiz_id=attempt.quiz.id) }}" class="btn btn-outline-primary">Retake Quiz</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

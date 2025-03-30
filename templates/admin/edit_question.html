@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Question - Quiz App{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Edit Question</h5>
+                <a href="{{ url_for('edit_quiz', quiz_id=question.quiz_id) }}" class="btn btn-outline-primary">Back to Quiz</a>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="question_text" class="form-label">Question Text</label>
+                        <textarea class="form-control" id="question_text" name="question_text" rows="3" required>{{ question.question_text }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="option_a" class="form-label">Option A</label>
+                        <input type="text" class="form-control" id="option_a" name="option_a" value="{{ question.option_a }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="option_b" class="form-label">Option B</label>
+                        <input type="text" class="form-control" id="option_b" name="option_b" value="{{ question.option_b }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="option_c" class="form-label">Option C</label>
+                        <input type="text" class="form-control" id="option_c" name="option_c" value="{{ question.option_c }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="option_d" class="form-label">Option D</label>
+                        <input type="text" class="form-control" id="option_d" name="option_d" value="{{ question.option_d }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="correct_answer" class="form-label">Correct Answer</label>
+                        <select class="form-select" id="correct_answer" name="correct_answer" required>
+                            <option value="A" {% if question.correct_answer == 'A' %}selected{% endif %}>Option A</option>
+                            <option value="B" {% if question.correct_answer == 'B' %}selected{% endif %}>Option B</option>
+                            <option value="C" {% if question.correct_answer == 'C' %}selected{% endif %}>Option C</option>
+                            <option value="D" {% if question.correct_answer == 'D' %}selected{% endif %}>Option D</option>
+                        </select>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Update Question</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

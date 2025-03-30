@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Your Performance - Quiz App{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Your Performance by Subject</h5>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-outline-primary">Back to Dashboard</a>
+            </div>
+            <div class="card-body">
+                <div id="subjectChart"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<script>
+    var chartDom = document.getElementById('subjectChart');
+    var myChart = echarts.init(chartDom);
+
+    var option = {
+        title: {
+            text: 'Your Performance by Subject',
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: '{b}: {c}%'
+        },
+        series: [
+            {
+                name: 'Subject Scores',
+                type: 'pie',
+                radius: '50%',
+                data: {{ subject_data|tojson|safe }},
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+
+    myChart.setOption(option);
+
+    window.addEventListener('resize', function() {
+        myChart.resize();
+    });
+</script>
+{% endblock %} 

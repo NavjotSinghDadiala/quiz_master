@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}User Scores - Quiz App{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Quiz Scores for {{ user.username }}</h5>
+            <div>
+                <a href="{{ url_for('visualize_user_summary') }}" class="btn btn-info me-2">
+                    <i class="fas fa-chart-pie"></i> View Performance
+                </a>
+                <a href="{{ url_for('manage_users') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Users
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Quiz</th>
+                            <th>Subject</th>
+                            <th>Score</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for attempt in attempts %}
+                        <tr>
+                            <td>{{ attempt.quiz.title }}</td>
+                            <td>{{ attempt.quiz.subject.name }}</td>
+                            <td>
+                                <span class="badge {% if attempt.score >= 70 %}bg-success{% elif attempt.score >= 40 %}bg-warning{% else %}bg-danger{% endif %}">
+                                    {{ "%.1f"|format(attempt.score) }}%
+                                </span>
+                            </td>
+                            <td>{{ attempt.date.strftime('%Y-%m-%d %H:%M') }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center">No quiz attempts found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

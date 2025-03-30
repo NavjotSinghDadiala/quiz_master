@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}{{ quiz.title }} - Quiz App{% endblock %}
+
+{% block extra_css %}
+<style>
+    .timer {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: #dc3545;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 1.2em;
+        z-index: 1000;
+    }
+    .question-card {
+        margin-bottom: 20px;
+    }
+    .option-label {
+        cursor: pointer;
+        padding: 10px;
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        transition: background-color 0.2s;
+    }
+    .option-label:hover {
+        background-color: #f8f9fa;
+    }
+    .option-label input[type="radio"] {
+        margin-right: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">{{ quiz.title }}</h5>
+        <div class="timer" id="timer">Time Remaining: <span id="time">Loading...</span></div>
+    </div>
+    <div class="card-body">
+        <form method="POST" id="quizForm">
+            {% for question in questions %}
+            <div class="mb-4">
+                <h6 class="mb-3">Question {{ loop.index }} of {{ questions|length }}</h6>
+                <p class="mb-3">{{ question.question_text }}</p>
+                <div class="options">
+                    <label class="option-label">
+                        <input type="radio" name="question_{{ question.id }}" value="A" required>
+                        {{ question.option_a }}
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="question_{{ question.id }}" value="B" required>
+                        {{ question.option_b }}
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="question_{{ question.id }}" value="C" required>
+                        {{ question.option_c }}
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="question_{{ question.id }}" value="D" required>
+                        {{ question.option_d }}
+                    </label>
+                </div>
+            </div>
+            {% endfor %}
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Submit Quiz</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function startTimer(duration, display) {
+        var timer = duration, minutes, seconds;
+        var countdown = setInterval(function () {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            display.textContent = minutes + ":" + seconds;
+
+            if (--timer < 0) {
+                clearInterval(countdown);
+                document.getElementById('quizForm').submit();
+            }
+        }, 1000);
+    }
+
+    window.onload = function () {
+        var duration = {{ quiz.duration * 60 }};
+        var display = document.querySelector('#time');
+        startTimer(duration, display);
+    };
+</script>
+{% endblock %} 

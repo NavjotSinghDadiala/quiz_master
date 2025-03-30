@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Quiz App{% endblock %}
+
+{% block content %}
+<div class="search-bar">
+    <form method="GET" class="row g-3">
+        <div class="col-md-8">
+            <input type="text" class="form-control" name="search" placeholder="Search quizzes or subjects..." value="{{ search_query }}">
+        </div>
+        <div class="col-md-4">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Available Quizzes</h5>
+            </div>
+            <div class="card-body">
+                {% if available_quizzes %}
+                    {% for quiz in available_quizzes %}
+                    <div class="quiz-card">
+                        <h5>{{ quiz.title }}</h5>
+                        <div class="subject">{{ quiz.subject.name }}</div>
+                        <div class="duration">Duration: {{ quiz.duration }} minutes</div>
+                        {% if quiz.description %}
+                        <p class="text-muted">{{ quiz.description }}</p>
+                        {% endif %}
+                        <a href="{{ url_for('take_quiz', quiz_id=quiz.id) }}" class="btn btn-primary">Start Quiz</a>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">No quizzes available at the moment.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Your Quiz History</h5>
+            </div>
+            <div class="card-body">
+                {% if attempts %}
+                    <div class="list-group">
+                        {% for attempt in attempts %}
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">{{ attempt.quiz.title }}</h6>
+                                    <small class="text-muted">{{ attempt.date.strftime('%Y-%m-%d %H:%M') }}</small>
+                                </div>
+                                <span class="badge bg-primary">{{ "%.1f"|format(attempt.score) }}%</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">You haven't taken any quizzes yet.</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">Your Performance</h5>
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('visualize_user_summary') }}" class="btn btn-info w-100">View Performance Analytics</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
